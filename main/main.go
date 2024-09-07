@@ -40,6 +40,8 @@ func main() {
 
 	// 根据basepaper，获取引用它的，和它引用的
 	app.Post("/papers/getCitesAndCited", api.GetPaperCitesAndCited)
+	// 删除论文
+	app.Post("/papers/delete", api.DeletePaperByID)
 
 	// Start server
 	log.Fatal(app.Listen(":3000"))

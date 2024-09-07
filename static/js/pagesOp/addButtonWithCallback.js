@@ -80,8 +80,33 @@ function DownloadCallback(t) {
     alert(t.attr("id"));
 }
 function DeleteCallback(t) {
-    // 
-    alert(t.attr("id"));
+    // 点击了删除论文
+    // 跳转查看详情
+    var citeName = t.attr("id").replace("delete_", "")
+    dataToBack = {
+        "citeName": citeName
+    }
+    $.ajax({
+        url: "/papers/delete",
+        method: "post",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(dataToBack),
+        success: function(res){
+            console.log(res)
+            // 这个地方应该不会有成功，因为成功就跳转了
+            if(res["status"] == true) {
+                alert("删除成功!");
+            } else {
+                alert("发生错误：", res["msg"])
+            }
+        },
+        error: function (res) {
+            alert("发生错误：", res["msg"])
+        }
+    });
+    // 重新加载
+    loadPapers();
 }
 function CreateButtonAppendToDivWithCallback(btnId, btnClass, btnText, targetDIV, callback) {
     $(`

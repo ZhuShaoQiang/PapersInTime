@@ -18,6 +18,11 @@ type PaperDetailFunc struct {
 	CiteName string `json:"citeName"`
 }
 
+// 从前端只拿id的结构
+type PaperIDOnlyType struct {
+	CiteName string `json:"citeName"`
+}
+
 // 从一个basepaper查找引用和非引用的结构，每一个内容就是一个paper
 type BasepaperCitesAndCited struct {
 	ID     string  `json:"citeName" gorm:"primaryKey"` // 引用名字，就是引用里面的唯一名字

@@ -16,26 +16,29 @@
                 <a class="navbar-brand" href="/">阅读论文关联系统</a>
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/static/papers/management.html">论文管理<span class="sr-only"></span></a>
+                        <a class="nav-link" href="/static/papers/management.html">论文管理<span class="sr-only"></span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">时间轴查看<span class="sr-only"></span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">引用树查看<span class="sr-only"></span></a>
+                        <!-- 暂时不让直接点过来，只能通过引用树跳转 -->
+                        <a class="nav-link active" href="#">引用树查看<span class="sr-only"></span></a>
                     </li>
                 </ul>
             </div>
         </nav>
         <!-- 这个地方防止一个画布，画各种关系 -->
 
-    </div>
 
-    <!--画图的区域-->
-    <textarea readonly hidden id="forDrawUseOnly"></textarea>
-    <textarea readonly hidden id="forRecordUseOnly"></textarea>
-    <div class="render_container scrollable-content">
-        <div class="flowchart center" id="drawArea"></div>
+        <!--画图的区域-->
+        <textarea readonly hidden id="forDrawUseOnly"></textarea>
+        <textarea readonly hidden id="forRecordUseOnly"></textarea>
+        <div class="render_container scrollable-content">
+            <div class="flowchart center" id="drawArea"></div>
+        </div>
+
+    <!-- 下面这个是最外边container的结束 -->
     </div>
 
     <!-- 下面是一个大幕，用来展示论文详情的 -->
