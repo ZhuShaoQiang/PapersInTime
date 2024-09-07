@@ -1,10 +1,10 @@
 # 从时间线管理论文
 可以使用类似于单向图的结构，从引用关系上查看自己看过的论文。如图所示:
-![image](mdfile\treeview.png)
+![image](mdfile/treeview.png)
 
 ## 上传论文
 在主页就是上传论文的页面
-![image](mdfile\uploadpaper.png)
+![image](mdfile/uploadpaper.png)
 ### 关键词介绍
 #### 引用名字
 这个地方就是这条记录的唯一主键，但是建议大家使用论文引用名字管理。
@@ -40,6 +40,6 @@
 点击选择其对应的论文，可以拖动进入。选择之后不会明确显示选中的哪一篇，但是确实选中了，这里是一个bug，后期修复
 # 示例
 以这些引用结构为例子:
-![image](mdfile\demo.jpg)
+![image](mdfile/demo.jpg)
 数据库是这样的：
-![image](mdfile\demodb.png)
+![image](mdfile/demodb.png)
