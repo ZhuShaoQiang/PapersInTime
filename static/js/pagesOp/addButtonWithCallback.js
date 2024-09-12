@@ -34,6 +34,7 @@ function paperModalByPaperIDOnly(paperID){
     // 展示modal
     $("#paperDetailModal").show()
 }
+// 给出从后台查到的论文数据，在modal中展示出来
 function paperModal(paper){
     console.log(paper)
     // 修改标题

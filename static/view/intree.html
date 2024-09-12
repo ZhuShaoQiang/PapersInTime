@@ -100,76 +100,48 @@
     <script src="/static/js/viewsInTree.js"></script>
     <script>
         $(document).ready(function() {
-        });
-        // 准备拿到存储的basepaper, 然后从数据库中查询
-        var basepaper = window.localStorage.getItem("basepaper");
-        console.log(basepaper)
-        data = {
-            "citeName": basepaper
-        }
-        $.ajax({
-            url: '/papers/getCitesAndCited',
-            method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(data),
-            success: function(res){
-                // 返回一堆数据，有前有后
-                console.log(res)
-                if (res["status"] == true) {
-                    const output = document.querySelector(".flowchart");
-                    const code = GetRawDataToDrawByData(res["data"]);
-                    console.log("rawdata: ", code);
-                    let insert = function (code) {
-                        output.innerHTML = code;
-                    };
-                    mermaid.render("preparedScheme", code, insert);
+            // 准备拿到存储的basepaper, 然后从数据库中查询
+            var basepaper = window.localStorage.getItem("basepaper");
+            if (basepaper == null || basepaper == ""){
+                alert("请点开一个论文后跳转回来.");
+            }
+            // console.log(basepaper)
+            GetCitesAndCitedAjax(basepaper);
+            // 成功重新渲染
+            // 拿到所有的a标签，然后添加点击事件，这个是再viewInTreeHTML中的
+            $("#drawArea").on('click', 'a', function (event) { 
+                event.preventDefault(); // 阻止默认跳转
+
+                citeName = $(this).attr("id")
+                //先从后台读取一个论文
+                dataToBack = {
+                    "citeName": citeName,
                 }
-                // 成功重新渲染
-                // 拿到所有的a标签，然后添加点击事件
-                $("#drawArea").on('click', 'a', function (event) { 
-                    event.preventDefault(); // 阻止默认跳转
-                    // 重新把大幕写进了，不知道为啥找不到加载出的js文件
-                        //先从后台读取一个论文
-                    dataToBack = {
-                        "citeName": $(this).attr("id")
-                    }
-                    $.ajax({
-                        url: "/papers/getPaperByID",
-                        method: "post",
-                        dataType: "json",
-                        contentType: "application/json",
-                        data: JSON.stringify(dataToBack),
-                        success: function(res){
-                            // 这个地方应该不会有成功，因为成功就跳转了
-                            if(res["status"] == true) {
-                                // 加载到modal
-                                $("#modal_title").text(res["data"].title)
-                                // 拿到当前我们访问的url
-                                var curURL = window.location.origin;
-                                var pdfPath = res["data"].path;
-                                console.log(curURL);
-                                // 展示论文
-                                $("#iframeInPaperDetailModal").attr("src", curURL+"/"+pdfPath)
-                                // 防止一个标记，记录当前论文
-                                $("#paperCiteNameCur").val(res["data"].citeName);
-                                // 展示modal
-                                $("#paperDetailModal").show()
-                            } else {
-                                alert("发生错误：", res["msg"])
-                            }
-                        },
-                        error: function (res) {
+                $.ajax({
+                    url: "/papers/getPaperByID",
+                    method: "post",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify(dataToBack),
+                    success: function(res){
+                        // 这个地方应该不会有成功，因为成功就跳转了
+                        if(res["status"] == true) {
+                            // 先重新获取这个的前后，并加载进页面
+                            GetCitesAndCitedAjax(citeName);
+                            // 加载到modal
+                            paperModal(res["data"]);
+                        } else {
                             alert("发生错误：", res["msg"])
                         }
-                    });
-                    // 读取完毕
+                    },
+                    error: function (res) {
+                        alert("发生错误：", res["msg"])
+                    }
+                });
+                // 读取完毕
 
-                })
-            },
-            error: function (res) {
-                alert("发生错误：", res["msg"]);
-            }
-        });  // ajax
+            })
+        });
     </script>
 </body>
 </html>

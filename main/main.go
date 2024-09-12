@@ -2,11 +2,8 @@ package main
 
 import (
 	"log"
-	"main/dbops"
 	"main/dbs"
 	"main/handler"
-	"main/handler/api"
-	"main/handler/view"
 	"main/middleware"
 
 	"github.com/gofiber/fiber/v2"
@@ -27,21 +24,7 @@ func main() {
 		Index:  "papers/management.html",
 	})
 
-	// API routes
-	app.Post("/upload", dbops.UploadFile)
-	app.Get("/getpapers", dbops.GetPapers)
-
-	// 获取论文详情
-	app.Post("/papers/detail", handler.GetPaperDetail)
-	app.Post("/papers/getPaperByID", handler.GetPaperByID)
-
-	// 查看页面
-	app.Get("/view/intree", view.ViewInTree)
-
-	// 根据basepaper，获取引用它的，和它引用的
-	app.Post("/papers/getCitesAndCited", api.GetPaperCitesAndCited)
-	// 删除论文
-	app.Post("/papers/delete", api.DeletePaperByID)
+	handler.InitAllRoute(app)
 
 	// Start server
 	log.Fatal(app.Listen(":3000"))
