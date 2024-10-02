@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>论文</title>
+</head>
+<body id="htmlbody">
+    <div class=".container col-8 justify-content-center offset-2">
+        <!-- 导航栏-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <a class="navbar-brand" href="/">阅读论文关联系统</a>
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/static/papers/management.html">论文管理<span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/static/papers/viewInTable.html">列表查看<span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">时间轴查看<span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">引用树查看<span class="sr-only"></span></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    <hr>    
+
+    <h2>现有论文</h2>
+    <!-- 展示已经上传的论文 -->
+     <div class=".container row" id="containerForCards">
+        暂时无论文检索到....
+     </div>
+
+    </div>
+
+    <!-- 下面是一个大幕，用来展示论文详情的 -->
+    <div class="modal" style="height: 99%; width: 99%;" tabindex="-1" id="paperDetailModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" style="height: 100%; width: 100%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick='CloseModalWithID("paperDetailModal")'>
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body modal-xl">
+                    <iframe id="iframeInPaperDetailModal" frameborder="0" width="100%", height="100%">
+                    </iframe>
+                </div>
+                <div class="modal-footer">
+                    <input type="text" id="paperCiteNameCur" hidden readonly="true" />
+                    <button type="button" class="btn btn-primary" onclick="JumpToCiteTreeInModal()">跳转至引用树查看</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 使用bootstrap和jquery -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jquery -->
+     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+    <style>
+        #dropzone {
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            width: 300px;
+            margin: 20px auto;
+            text-align: center;
+        }
+    </style>
+
+    <!-- 自己的代码 -->
+    <script src="/static/js/pagesOp/addButtonWithCallback.js"></script>
+    <script src="/static/js/actions/buttonActions.js"></script>
+    <script src="/static/js/managementhtml.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 获取现有的论文并加载到页面上
+
+            // 上传新论文
+            $('#paperToBeUploadForm').on('submit', function(e) {
+                e.preventDefault();  // 阻止默认的行为，只执行自己的
+
+                var formData = new FormData(this);
+                console.log("formdata: ", formData);
+
+                $.ajax({
+                    url: "/upload",  // 向/uploadurl上传
+                    method: "post",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(res) {
+                        loadPapers();  // 重新加载现有论文
+                    },
+                    error: function(jqXHR, textStatus, errThrown){
+                        console.log("error");
+                    }
+                });
+
+            });
+
+            // 页面加载时获取现有论文
+            loadPapers();
+        });
+    </script>
+</body>
+</html>

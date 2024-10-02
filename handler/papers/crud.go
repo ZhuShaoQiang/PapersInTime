@@ -21,6 +21,7 @@ func GetPapers(c *fiber.Ctx) error {
 
 // 上传论文或者更新论文
 func UploadFile(c *fiber.Ctx) error {
+	fmt.Println("uploadfile")
 	var resData map[string]interface{} = make(map[string]interface{})
 	resData["status"] = false
 	resData["msg"] = "未知错误"
@@ -28,19 +29,22 @@ func UploadFile(c *fiber.Ctx) error {
 	// Get file from form
 	file, err := c.FormFile("file")
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Cannot get file from form"})
+		resData["msg"] = "取出文件失败"
+		return c.Status(fiber.StatusBadRequest).JSON(resData)
 	}
 
 	// Create directory if not exists
 	uploadDir := "./static/files"
 	if err := os.MkdirAll(uploadDir, os.ModePerm); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Cannot create upload directory"})
+		resData["msg"] = "创建文件的目录失败"
+		return c.Status(fiber.StatusInternalServerError).JSON(resData)
 	}
 
 	// Save file to uploads directory
 	filePath := filepath.Join(uploadDir, filepath.Base(file.Filename))
 	if err := c.SaveFile(file, filePath); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Cannot save file"})
+		resData["msg"] = "保存文件失败"
+		return c.Status(fiber.StatusInternalServerError).JSON(resData)
 	}
 
 	// Get other form values
@@ -51,6 +55,15 @@ func UploadFile(c *fiber.Ctx) error {
 	year := c.FormValue("pubyear")
 	cites := c.FormValue("cites")
 	cited := c.FormValue("cited")
+	// fmt.Println("拿到的数据:")
+	// fmt.Println(citeName)
+	// fmt.Println(title)
+	// fmt.Println(author)
+	// fmt.Println(paperlabel)
+	// fmt.Println(year)
+	// fmt.Println(cites)
+	// fmt.Println(cited)
+	// fmt.Println(filePath)
 
 	flag, record := utils.IsRecordExists(citeName)
 
@@ -64,6 +77,7 @@ func UploadFile(c *fiber.Ctx) error {
 		record.Year = year
 		record.Cite = cites
 		record.Cited = cited
+		record.Path = filePath
 		opRes = dbs.DB.Save(&record)
 	} else {
 		// Save paper info to database

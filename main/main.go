@@ -10,7 +10,9 @@ import (
 )
 
 func main() {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		BodyLimit: 100 * 1024 * 1024, // 100MB的最大大小
+	})
 
 	// Initialize database
 	// sqlite只支持：null, int, book, date and time, real, string, blob
