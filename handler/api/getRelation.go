@@ -63,7 +63,7 @@ func GetPaperCitesAndCited(c *fiber.Ctx) error {
 	dbs.DB.Where("cite LIKE ?", "%"+paper.ID+"%").Find(&papersCitePaper)
 	paper.Cited = append(paper.Cited, papersCitePaper...)
 
-	fmt.Println("查询结果:", papersCitePaper)
+	// fmt.Println("查询结果:", papersCitePaper)
 
 	resData["status"] = true
 	resData["data"] = paper
